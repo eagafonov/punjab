@@ -4,3 +4,6 @@ twistd.log
 twistd.pid
 dropin.cache
 *.~*
+build*
+debian/files
+debian/python-twisted-*
