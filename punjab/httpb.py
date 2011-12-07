@@ -355,6 +355,15 @@ class Httpb(resource.Resource):
                  </body>
                </html>"""
 
+    def handleRequestClosed(self, status, request):
+        if request.session is not None:
+            log.msg("Request is terminated (sid:%s) %s" % (request.session.sid, status) )
+
+            request.closedOrFinished = True
+            request.session.terminate()
+        else:
+            log.msg("Request is terminated (no sid): %s" % status )
+
     def render_POST(self, request):
         """
         Parse received xml
@@ -362,6 +371,12 @@ class Httpb(resource.Resource):
         request.setHeader('Access-Control-Allow-Origin', '*')
         request.setHeader('Access-Control-Allow-Headers', 'Content-Type')
         request.content.seek(0, 0)
+
+        # Prepare termination handler
+        request.session = None
+        request.closedOrFinished = False
+        request.notifyFinish().addErrback(self.handleRequestClosed, request)
+
         if self.service.v:
             log.msg('HEADERS %s:' % (str(time.time()),))
             log.msg(request.received_headers)
@@ -400,6 +415,7 @@ class Httpb(resource.Resource):
                         log.msg(request.rid)
 
                 s, d = self.service.parseBody(body_tag, xmpp_elements)
+                request.session = s
                 d.addCallback(self.return_httpb, s, request)
             elif body_tag.hasAttribute('sid'):
                 if self.service.v:
@@ -410,6 +426,7 @@ class Httpb(resource.Resource):
             else:
                 # start session
                 s, d = self.service.startSession(body_tag, xmpp_elements)
+                request.session = s
                 d.addCallback(self.return_session, s, request)
 
             # Add an error back for returned errors
@@ -503,6 +520,10 @@ class Httpb(resource.Resource):
 
 
     def return_body(self, request, b, charset="utf-8"):
+        if request.closedOrFinished is True:
+            log.msg('HTTPB return_body ignored: request is already finished')
+            return
+
         request.setResponseCode(200)
         bxml = b.toXml(prefixes=ns.XMPP_PREFIXES.copy()).encode(charset,'replace')
 
@@ -517,6 +538,10 @@ class Httpb(resource.Resource):
         request.finish()
 
     def send_http_error(self, code, request, condition = 'undefined-condition', typ = 'terminate', data = '', charset = 'utf-8', children=None):
+        if request.closedOrFinished is True:
+            log.msg('HTTPB send_http_error failed: request is already finished')
+            return
+
         request.setResponseCode(int(code))
         xml_prefixes = ns.XMPP_PREFIXES.copy()
 
