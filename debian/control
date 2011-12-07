@@ -3,7 +3,7 @@ Section: python
 Priority: optional
 Maintainer: Eugene Agafonov <e.a.agafonov@gmail.com>
 Uploaders: Eugene Agafonov <e.a.agafonov@gmail.com>
-Build-Depends: debhelper (>= 5.0.37.1), python-all (>= 2.6.6-9~), python-twisted-web (>= 10.0), python-twisted-words (>= 10.0), patch
+Build-Depends: debhelper (>= 5.0.37.1), python-all (>= 2.6.6), python-twisted-web (>= 10.0), python-twisted-words (>= 10.0), patch
 XS-Python-Version: all
 Standards-Version: 3.9.1
 

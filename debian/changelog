@@ -1,3 +1,9 @@
+twisted-plugin-punjab (2011.12.07-2) unstable; urgency=low
+
+  * Fix build dependecies for Debian 6.0
+
+ -- Eugene Agafonov <e.a.agafonov@gmail.com>  Wed, 07 Dec 2011 16:40:31 +0400
+
 twisted-plugin-punjab (2011.12.07-1) unstable; urgency=low
 
   * HACK: Finish session if client connection is terminated
