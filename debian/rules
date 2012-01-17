@@ -56,6 +56,7 @@ binary-indep: build install
 
 	dh_installdocs -ppython-twisted-plugin-punjab
 	dh_installmenu -i
+	dh_installinit --name=punjab --no-start
 	dh_compress -i -X.py
 	dh_fixperms -i
 	dh_python2 -i

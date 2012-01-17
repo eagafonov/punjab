@@ -1,0 +1,16 @@
+# Defaults for punjab initscript
+# sourced by /etc/init.d/punjab
+# installed at /etc/default/punjab by the maintainer scripts
+
+#
+# This is a POSIX shell fragment
+#
+
+# Additional options that are passed to the Daemon.
+
+DAEMON_ARGS=""
+
+# Some usefull args
+# --verbose
+# DAEMON_ARGS="--verbose"
+
